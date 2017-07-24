@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div ref="wrapper">
     <slot></slot>
   </div>
 </template>
@@ -61,7 +61,6 @@
       }
     }
   }
-
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

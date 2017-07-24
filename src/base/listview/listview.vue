@@ -1,7 +1,7 @@
 <template>
   <scroll class="listview" :data="data" ref="listview">
     <ul>
-      <li v-for="(group, index) in data" class="list-group" ref="listgroup" :key="index">
+      <li v-for="(group, index) in data" class="list-group" ref="listGroup" :key="index">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li class="list-group-item" v-for="(item, index) in group.items" :key="index">
@@ -11,7 +11,7 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchend.stop>
+    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove" @touchend.stop>
       <ul>
         <li v-for="(item, index) in shortcutList" class="item" :key="index" :data-index="index">
           {{item}}
@@ -27,9 +27,12 @@
   import {getData} from 'common/js/dom'
 
   // const TITLE_HEIGHT = 30
-  // const ANCHOR_HEIGHT = 18
+  const ANCHOR_HEIGHT = 18
 
   export default {
+    created() {
+      this.touch = {}
+    },
     props: {
       data: {
         type: Array,
@@ -46,7 +49,20 @@
     methods: {
       onShortcutTouchStart(e) {
         let anchorIndex = getData(e.target, 'index')
-        this.$refs.listview.scrollToElement(this.$refs.listgroup[anchorIndex], 0)
+        let firstTouch = e.touches[0]
+        this.touch.y1 = firstTouch.pageY
+        this.touch.anchorIndex = anchorIndex
+        this._scrollTo(anchorIndex)
+      },
+      onShortcutTouchMove(e) {
+        let firstTouch = e.touches[0]
+        this.touch.y2 = firstTouch.pageY
+        let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+        let anchorIndex = parseInt(this.touch.anchorIndex) + delta
+        this._scrollTo(anchorIndex)
+      },
+      _scrollTo(index) {
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
       }
     },
     components: {
