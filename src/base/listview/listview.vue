@@ -1,7 +1,7 @@
 <template>
-  <scroll class="listview" :data="data">
+  <scroll class="listview" :data="data" ref="listview">
     <ul>
-      <li v-for="(group, index) in data" class="list-group" :key="index">
+      <li v-for="(group, index) in data" class="list-group" ref="listgroup" :key="index">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li class="list-group-item" v-for="(item, index) in group.items" :key="index">
@@ -11,9 +11,9 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut">
+    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchend.stop>
       <ul>
-        <li v-for="(item, index) in shortcutList" class="item" :key="index">
+        <li v-for="(item, index) in shortcutList" class="item" :key="index" :data-index="index">
           {{item}}
         </li>
       </ul>
@@ -24,7 +24,7 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   // import Loading from 'base/loading/loading'
-  // import {getData} from 'common/js/dom'
+  import {getData} from 'common/js/dom'
 
   // const TITLE_HEIGHT = 30
   // const ANCHOR_HEIGHT = 18
@@ -41,6 +41,12 @@
         return this.data.map((group) => {
           return group.title.substr(0, 1)
         })
+      }
+    },
+    methods: {
+      onShortcutTouchStart(e) {
+        let anchorIndex = getData(e.target, 'index')
+        this.$refs.listview.scrollToElement(this.$refs.listgroup[anchorIndex], 0)
       }
     },
     components: {
