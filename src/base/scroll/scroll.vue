@@ -24,6 +24,10 @@
       listenScroll: {
         type: Boolean,
         default: false
+      },
+      pullup: {
+        type: Boolean,
+        default: false
       }
     },
     mounted() {
@@ -45,6 +49,14 @@
           let me = this
           this.scroll.on('scroll', (pos) => {
             me.$emit('scroll', pos)
+          })
+        }
+
+        if (this.pullup) {
+          this.scroll.on('scrollEnd', () => {
+            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit('scrollToEnd')
+            }
           })
         }
       },
