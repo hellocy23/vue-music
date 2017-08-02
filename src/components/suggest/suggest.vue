@@ -3,7 +3,9 @@
           ref="suggest" 
           class="suggest" 
           :pullup="pullup"
+          :beforeScroll="beforeScroll"
           @scrollToEnd="searchMore"
+          @beforeScroll="listScroll"
   >
     <ul class="suggest-list">
       <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
@@ -16,13 +18,16 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+      <no-result title="抱歉，暂无搜索结果"></no-result>
+    </div>
   </scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-//   import NoResult from 'base/no-result/no-result'
+  import NoResult from 'base/no-result/no-result'
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
@@ -48,7 +53,8 @@
         page: 1,
         result: [],
         pullup: true,
-        hasMore: true
+        hasMore: true,
+        beforeScroll: true
       }
     },
     methods: {
@@ -102,6 +108,13 @@
         } else {
           this.insertSong(item)
         }
+        this.$emit('select')
+      },
+      refresh() {
+        this.$refs.suggest.refresh()
+      },
+      listScroll() {
+        this.$emit('listScroll')
       },
       _checkMore(data) {
         const song = data.song
@@ -142,7 +155,8 @@
     },
     components: {
       Scroll,
-      Loading
+      Loading,
+      NoResult
     }
   }
 </script>
