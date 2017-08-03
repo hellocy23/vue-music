@@ -7,6 +7,11 @@ import fastclick from 'fastclick'
 import 'common/stylus/index.styl'
 import VueLazyLoad from 'vue-lazyload'
 
+/* eslint-disable no-unused-vars */
+// import vConsole from 'vconsole'
+
+// console.log('test')
+
 fastclick.attach(document.body)
 
 Vue.use(VueLazyLoad, {
