@@ -2,7 +2,7 @@
     "apps": [
         {
             "name": "vue-music", //名称
-            "script": "app.js", //程序入库
+            "script": "prod.server.js", //程序入库
             "cwd": "./", //根目录
             "env": {
                 "COMMON_VARIABLE": "true"
