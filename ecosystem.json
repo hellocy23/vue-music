@@ -1,0 +1,36 @@
+{
+    "apps": [
+        {
+            "name": "vue-music", //名称
+            "script": "app.js", //程序入库
+            "cwd": "./", //根目录
+            "env": {
+                "COMMON_VARIABLE": "true"
+            },
+            "env_production": {
+                "NODE_ENV": "production"
+            },
+            "error_file":"./logs/app-err.log",//错误输出日志
+            "out_file":"./logs/app-out.log",  //日志
+            "log_date_format":"YYYY-MM-DD HH:mm Z" //日期格式
+        }
+    ],
+    "deploy": {
+        "production": {
+            "user": "yu_manager",
+            "host": [
+                "47.94.211.202"
+            ],
+            "port": "3389",
+            "ref": "origin/master",
+            "repo": "https://github.com/cyh5kf/vue-music.git",
+            "path": "/www/vue-music/production",
+            "ssh_options": "StrictHostKeyChecking=no",
+            "post-deploy": "cnpm install && npm run build && pm2 startOrRestart ecosystem.json --env production",
+            "env"  : {
+                "NODE_ENV": "production"
+            }
+        }
+    }
+}
+

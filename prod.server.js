@@ -2,7 +2,7 @@ var express = require('express')
 var config = require('./config/index')
 var app = express()
 var axios = require('axios')
-
+var http = require('http')
 var apiRoutes = express.Router()
 
 //获取歌单接口
@@ -51,10 +51,11 @@ app.use(express.static('./dist'))
 
 var port = process.env.PORT || config.build.port
 
-module.exports = app.listen(port, function(err) {
-  if (err) {
-    console.log(err)
+var server = http.createServer(app);
+module.exports = server.listen(port, (err) => {
+  if(err) {
+    console.log(`err: ${err}`);
     return
   }
-  console.log('listening at http://localhost:' + port + '\n')
-})
+  console.log(`server is running on port: ${server.address().port}`);
+});
